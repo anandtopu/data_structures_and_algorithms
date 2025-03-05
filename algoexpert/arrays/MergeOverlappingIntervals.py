@@ -21,18 +21,27 @@ Sample Output
 '''
 
 # O(nlog(n)) time | O(n) space - where n is the length of the input array
-
 def mergeOverlappingIntervals(intervals):
-    sortedIntervals = sorted(intervals, key=lambda x: x[0])
-    mergedIntervals = []
-    currentInterval = sortedIntervals[0]
-    mergedIntervals.append(currentInterval)
-    for nextInterval in sortedIntervals[1:]:
-        _, currentIntervalEnd = currentInterval
-        nextIntervalStart, nextIntervalEnd = nextInterval
-        if currentIntervalEnd >= nextIntervalStart:
-            currentInterval[1] = max(currentIntervalEnd, nextIntervalEnd)
+    # Sort intervals based on the start value
+    intervals.sort(key=lambda x: x[0])
+
+    # Initialize the merged intervals list with the first interval
+    merged_intervals = []
+    current_interval = intervals[0]
+    merged_intervals.append(current_interval)
+
+    # Iterate through the sorted intervals starting from the second interval
+    for next_interval in intervals[1:]:
+        current_start, current_end = current_interval
+        next_start, next_end = next_interval
+
+        # Check if the current interval overlaps with the next interval
+        if current_end >= next_start:
+            # Merge the intervals by updating the end of the current interval
+            current_interval[1] = max(current_end, next_end)
         else:
-            currentInterval = nextInterval
-            mergedIntervals.append(currentInterval)
-    return mergedIntervals
+            # No overlap, move to the next interval
+            current_interval = next_interval
+            merged_intervals.append(current_interval)
+
+    return merged_intervals
